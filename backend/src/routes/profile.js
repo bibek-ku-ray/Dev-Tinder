@@ -2,12 +2,12 @@ const express = require('express');
 const {userAuth} = require("../middlewares/auth");
 const {validateEditProfileData} = require("../utils/validateUserData");
 const bcrypt = require("bcryptjs")
-const validator = require("validator/es");
+const validator = require("validator");
 
 const profileRouter = express.Router();
 
 // to view the profile
-profileRouter.get("/profile/view", userAuth, async (req, res) => {
+profileRouter.get("/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
     res.status(200).json({success: true, data: user});
@@ -17,7 +17,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 });
 
 // to edit the profile
-profileRouter.post("/profile/edit", userAuth, async (req, res) => {
+profileRouter.post("/edit", userAuth, async (req, res) => {
   try {
     if (!validateEditProfileData(req)) {
       throw new Error("Invalid Edit request")
@@ -37,7 +37,7 @@ profileRouter.post("/profile/edit", userAuth, async (req, res) => {
 })
 
 // change password
-profileRouter.post("/profile/password", async (req, res) => {
+profileRouter.post("/password", async (req, res) => {
   try {
     const user = req.user;
     const {newPassword, oldPassword} = req.body
