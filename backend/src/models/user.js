@@ -1,10 +1,10 @@
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
-  username:{
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     validate(value) {
-      if(!validator.isEmail(value)) throw new Error("Email is invalid");
+      if (!validator.isEmail(value)) throw new Error("Email is invalid");
     }
   },
   password: {
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     minlength: [8, "Must be at least 8 characters."],
     trim: true,
     validate(value) {
-      if(!validator.isStrongPassword(value)) throw new Error("User strong Password");
+      if (!validator.isStrongPassword(value)) throw new Error("User strong Password");
     }
   },
   age: {
@@ -65,14 +65,14 @@ const userSchema = new mongoose.Schema({
       if (!validator.isURL(value)) throw new Error("Profile picture url is invalid");
     }
   }
-}, { timestamps: true });
+}, {timestamps: true});
 
-userSchema.methods.verifyPassword = async function(inputPassword) {
+userSchema.methods.verifyPassword = async function (inputPassword) {
   return await bcrypt.compare(inputPassword, this.password);
 }
 
-userSchema.methods.generateAuthToken = async function() {
-  return await jwt.sign({ _id: this._id }, process.env.JWT_SECRET_KEY, {expiresIn: '7d'});
+userSchema.methods.generateAuthToken = async function () {
+  return await jwt.sign({_id: this._id}, process.env.JWT_SECRET_KEY, {expiresIn: '7d'});
 }
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

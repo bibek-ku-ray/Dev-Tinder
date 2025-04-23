@@ -18,10 +18,12 @@ app.get("/", (req, res) => {
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const requestRoutes = require("./routes/request");
+const userRoutes = require("./routes/user")
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/request", requestRoutes);
+app.use("/api/user", userRoutes)
 
 // Connecting to a database.
 connectDB()
