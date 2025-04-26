@@ -1,7 +1,8 @@
 const express = require("express")
-const {userAuth} = require("../middlewares/auth");
+const {userAuth} = require("../middlewares/auth.js");
 const {StatusCodes} = require("http-status-codes");
 const ConnectionRequest = require("../models/connectionRequest")
+const User = require("../models/user.js")
 
 const userRouter = express.Router()
 
@@ -72,6 +73,90 @@ userRouter.get("/connections", userAuth, async (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({
       success: false,
       message: "Something went wrong!",
+    })
+  }
+})
+
+
+// feed
+userRouter.get("/feed", userAuth, async (req, res) => {
+
+  // all the users in feeds except loggedInUser
+  // exclude already connected
+
+
+  try {
+  // Approach: 1
+    /*
+    const loggedInUser = req.user
+    const connections = await ConnectionRequest.find({
+      $or: [
+        {toUserId: loggedInUser._id},
+        {fromUserId: loggedInUser._id}
+      ]
+    })
+
+    const loggedInUserConnectionsIds = connections?.map((item) => {
+      return item.fromUserId.equals(loggedInUser._id) ? item.toUserId : item.fromUserId
+    })
+    console.log(loggedInUserConnectionsIds)
+
+    const feeds = await User.find({
+      _id: {
+        $nin: [loggedInUser._id, ...loggedInUserConnectionsIds]
+      }
+    }).select(USER_PUBLIC_DATA);
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: feeds
+    })
+    */
+
+    // Approach: 2 with pagination
+    const loggedInUser  = req.user
+    const page = parseInt(req.query.page) || 1
+    let limit = parseInt(req.query.limit) || 10
+
+    //  the maximum limit can be 25
+    limit = limit > 25 ? 25 : limit
+
+    const skip = (page-1) * limit
+
+    const connectionRequests = await ConnectionRequest.find({
+      $or: [{fromUserId: loggedInUser._id}, {toUserId: loggedInUser._id}]
+    }).select("toUserId fromUserId")
+
+    const hideUserFromFeed = new Set()
+
+    connectionRequests.forEach((request) => {
+          hideUserFromFeed.add(request.fromUserId);
+          hideUserFromFeed.add(request.toUserId);
+        }
+    )
+
+    const users = await User.find({
+      $and:[
+        {_id: {$ne: loggedInUser._id}},
+        {_id: {$nin: Array.from(hideUserFromFeed)}}
+      ]
+    })
+    .select(USER_PUBLIC_DATA)
+    .skip(skip) // pagination
+    .limit(limit);
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: users
+    })
+
+  } catch (e) {
+    console.log(e)
+
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: "Something went wrong!",
+      error: e.message
     })
   }
 })
