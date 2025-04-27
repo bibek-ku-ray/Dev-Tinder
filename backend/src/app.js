@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database.js");
+const cors = require("cors")
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,6 +10,12 @@ const PORT = process.env.PORT || 3001;
 // middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Alive");
