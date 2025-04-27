@@ -1,18 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router";
+import Login from "./components/Login.jsx";
+import Body from "./components/Body.jsx";
+import Signup from "./components/Signup.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
-      <button className="btn btn-primary">Primary</button>
-      <button className="btn btn-secondary">Secondary</button>
-      <button className="btn btn-accent">Accent</button>
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path={"/"} element={<Body />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup/>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
