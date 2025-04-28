@@ -1,20 +1,38 @@
+import axios from "axios";
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { removeUser } from "../utils/userSlice";
 
 const Navbar = () => {
-
-  const user = useSelector((state) => state.user.data)
-  console.log(user)
+  const user = useSelector((state) => state.user?.data);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/auth/logout`,{}, {
+        withCredentials: true,
+      });
+      dispatch(removeUser());
+      navigate("/")
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   return (
     <div>
       <div className="navbar bg-base-300 shadow-xs shadow-primary">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">
+          <Link
+            to={`${user ? "/feed" : "/"}`}
+            className="btn btn-ghost text-xl"
+          >
             <img width={`20px`} height={`20px`} alt="logo" src="/parrot.svg" />
             <code>devTinder</code>
-          </a>
+          </Link>
         </div>
         {user ? (
           <div className="flex items-center gap-3">
@@ -36,24 +54,28 @@ const Navbar = () => {
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between">
+                  <Link to={`/profile`} className="justify-between">
                     Profile
                     <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <Link onClick={handleLogout}>Logout</Link>
                 </li>
               </ul>
             </div>
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <Link to={`/signup`} className="btn btn-soft btn-primary">Signup</Link>
-            <Link to={`/login`} className="btn btn-soft btn-success">Login</Link>
+            <Link to={`/signup`} className="btn btn-soft btn-primary">
+              Signup
+            </Link>
+            <Link to={`/login`} className="btn btn-soft btn-success">
+              Login
+            </Link>
           </div>
         )}
       </div>

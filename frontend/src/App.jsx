@@ -9,17 +9,34 @@ import { Provider } from "react-redux";
 import { store } from "./utils/store.js";
 import Feed from "./components/Feed.jsx";
 import Hero from "./components/Hero.jsx";
+import Profile from "./components/profile.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
-
   return (
     <>
       <Provider store={store}>
         <BrowserRouter basename="/">
           <Routes>
             <Route path={"/"} element={<Body />}>
-              <Route path="/" element={<Hero/>} />
-              <Route path="/feed" element={<Feed/>} />
+              <Route path="/" element={<Hero />} />
+
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/feed"
+                element={
+                  <ProtectedRoute>
+                    <Feed />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
             </Route>
