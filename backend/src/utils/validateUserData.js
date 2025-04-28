@@ -31,12 +31,13 @@ const validateEditProfileData = (req) => {
     "lastName",
     "password",
     "age",
+    "gender",
     "bio",
     "skills",
     "profilePicture",
   ];
 
-  return Object.key(req.body).every((k) => editAllowedFields.includes(k))
+  return Object.keys(req.body).every((k) => editAllowedFields.includes(k))
 }
 
 module.exports = {

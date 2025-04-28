@@ -1,8 +1,11 @@
-const express = require('express');
-const {validateSignupData, validateLoginData} = require("../utils/validateUserData.js");
+const express = require("express");
+const {
+  validateSignupData,
+  validateLoginData,
+} = require("../utils/validateUserData.js");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user.js");
-const {userAuth} = require("../middlewares/auth.js");
+const { userAuth } = require("../middlewares/auth.js");
 
 const authRouter = express.Router();
 
@@ -10,9 +13,9 @@ authRouter.post("/signup", async (req, res) => {
   try {
     validateSignupData(req);
 
-    const {password} = req.body;
+    const { password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({...req.body, password: hashedPassword});
+    const user = new User({ ...req.body, password: hashedPassword });
 
     await user.validate();
     await user.save();
@@ -26,56 +29,56 @@ authRouter.post("/signup", async (req, res) => {
 authRouter.post("/login", async (req, res) => {
   try {
     validateLoginData(req);
-    const {username, email, password} = req.body;
-    const user = await User.findOne({$or: [{username}, {email}]});
+    const { username, email, password } = req.body;
+    const user = await User.findOne({ $or: [{ username }, { email }] });
 
     if (!user) throw new Error("Invalid credentials");
 
-    const isPasswordValid = await user.verifyPassword(password)
+    const isPasswordValid = await user.verifyPassword(password);
 
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
     // creating jwt token with userid
-    const jwtToken = await user.generateAuthToken()
+    const jwtToken = await user.generateAuthToken();
 
     res
-        .cookie("token", jwtToken, {
-          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        })
-        .status(200)
-        .json({
-          success: true,
-          message: "LoggedIn successfully",
-          data: user,
-          error: ""
-        });
-  } catch (e) {
-    res
-      .status(e.statusCode || 400)
+      .cookie("token", jwtToken, {
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      })
+      .status(200)
       .json({
-        success: false,
-        message: "LoggedIn Failed",
-        data: "",
-        error: e.message,
+        success: true,
+        message: "LoggedIn successfully",
+        data: user,
+        error: "",
       });
+  } catch (e) {
+    res.status(e.statusCode || 400).json({
+      success: false,
+      message: "LoggedIn Failed",
+      data: "",
+      error: e.message,
+    });
   }
 });
 
 // logout
 authRouter.post("/logout", async (req, res) => {
   res
-      .status(200)
-      .cookie("token", null, {
-        expires: new Date(Date.now())
-      })
-      .send("Logout successfully")
-})
-
+    .status(200)
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: "Logout successfully",
+    });
+});
 
 // update profile
 authRouter.put("/update/:id", userAuth, async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const userData = req.body;
 
     // validating which field can be updated
@@ -91,7 +94,7 @@ authRouter.put("/update/:id", userAuth, async (req, res) => {
     ];
 
     const isEditAllowed = Object.keys(userData).every((key) =>
-        updateAllowed.includes(key)
+      updateAllowed.includes(key)
     );
 
     if (!isEditAllowed) {
@@ -105,7 +108,7 @@ authRouter.put("/update/:id", userAuth, async (req, res) => {
       });
     }
 
-    const user = await User.findOneAndUpdate({_id: id}, userData, {
+    const user = await User.findOneAndUpdate({ _id: id }, userData, {
       returnDocument: "after",
       runValidators: true,
     });
@@ -114,7 +117,7 @@ authRouter.put("/update/:id", userAuth, async (req, res) => {
       return res.status(404).send("user not found");
     }
 
-    return res.status(200).json({data: user});
+    return res.status(200).json({ data: user });
   } catch (e) {
     res.send("Fail to update: " + e.message);
   }
