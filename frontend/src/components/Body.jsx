@@ -5,12 +5,12 @@ import Footer from "./footer.jsx";
 
 const Body = () => {
   return (
-    <div className="">
-      <div>
+    <div>
+      <div className="h-screen">
         <Navbar />
         <Outlet />
       </div>
-      <div>
+      <div className="">
         <Footer />
       </div>
     </div>

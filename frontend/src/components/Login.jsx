@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux"
+import { addUser } from "../utils/userSlice";
+
 const Login = () => {
+
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleSubmit = async () => {
     await axios
@@ -14,7 +20,8 @@ const Login = () => {
         withCredentials: true,
       })
       .then(function (response) {
-        console.log(response.data);
+        dispatch(addUser(response.data))
+        navigate("/")
       })
       .catch(function (error) {
         console.log(error);
@@ -61,7 +68,7 @@ const Login = () => {
             </button>
           </div>
           <div className="card-actions justify-center">
-            Already registered?
+            Don't have account?
             <Link className="link link-primary" to={`/signup`}>
               Signup
             </Link>
