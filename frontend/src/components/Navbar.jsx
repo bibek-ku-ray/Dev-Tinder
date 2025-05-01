@@ -3,6 +3,8 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
+import { removeFeed } from "../utils/feedSlice";
+import { removeRequest } from "../utils/requestSlice";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.data);
@@ -16,6 +18,8 @@ const Navbar = () => {
         withCredentials: true,
       });
       dispatch(removeUser());
+      dispatch(removeFeed())
+      dispatch(removeRequest())
       navigate("/")
     } catch (error) {
       console.log(error)
@@ -60,7 +64,10 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link to={`/request`}>Requests</Link> 
+                </li>
+                <li>
+                  <Link to={`/connection`}>Connections</Link> 
                 </li>
                 <li>
                   <Link onClick={handleLogout}>Logout</Link>

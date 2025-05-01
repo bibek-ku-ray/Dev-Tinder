@@ -11,6 +11,8 @@ import Feed from "./components/Feed.jsx";
 import Hero from "./components/Hero.jsx";
 import Profile from "./components/profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import Request from "./components/Request.jsx";
+import Connections from "./components/Connections.jsx";
 
 function App() {
   return (
@@ -34,6 +36,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Feed />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/request"
+                element={
+                  <ProtectedRoute>
+                    <Request />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/connection"
+                element={
+                  <ProtectedRoute>
+                    <Connections />
                   </ProtectedRoute>
                 }
               />
