@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "./Navbar.jsx";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Footer from "./footer.jsx";
+import Footer from "./Footer.jsx";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice.js";
