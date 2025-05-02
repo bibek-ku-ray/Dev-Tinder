@@ -27,7 +27,7 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <div className="navbar bg-base-300 shadow-xs shadow-primary">
         <div className="flex-1">
           <Link
@@ -40,6 +40,7 @@ const Navbar = () => {
         </div>
         {user ? (
           <div className="flex items-center gap-3">
+            <p>{user.firstName}</p>
             <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
@@ -77,12 +78,12 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <Link to={`/signup`} className="btn btn-soft btn-primary">
+            {/* <Link to={`/signup`} className="btn btn-soft btn-primary">
               Signup
             </Link>
             <Link to={`/login`} className="btn btn-soft btn-success">
               Login
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

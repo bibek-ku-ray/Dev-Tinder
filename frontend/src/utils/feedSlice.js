@@ -9,7 +9,12 @@ const feedSlice = createSlice({
       return action.payload
     },
     removeFeed: (state, action) => {
-      return null
+      if (!state || !state.data) return state;
+
+      return {
+        ...state,
+        data: state.data.filter((user) => user._id !== action.payload),
+      };
     }
   }
 })

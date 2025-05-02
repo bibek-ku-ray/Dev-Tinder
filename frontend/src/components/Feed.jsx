@@ -8,7 +8,8 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const feedData = useSelector((state) => state.feed);
-  console.log("feedData:: ", feedData?.data[0]);
+
+  console.log("feedData:: ", feedData?.data);
   const dispatch = useDispatch();
 
   const fetchFeedData = async () => {
@@ -33,7 +34,7 @@ const Feed = () => {
     feedData && (
       <div className="flex justify-center mt-20">
         {feedData.data.length > 0 ? (
-          <UserCard user={feedData?.data[1]} />
+          <UserCard user={feedData.data[0]} />
         ) : (
           <div>No feed</div>
         )}

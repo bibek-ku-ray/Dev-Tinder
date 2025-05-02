@@ -10,11 +10,23 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [signupData, setSignupData] = useState({
+    email: "",
+    password: "",
+    username: "",
+    firstName: "",
+    lastName: "",
+
+  });
   const [errMessage, setErrMessage] = useState("");
+  const [isLoginForm, setIsLoginForm] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  console.log(signupData);
+  
+
+  const handleLoginSubmit = async () => {
     await axios
       .post(`${BASE_URL}/auth/login`, loginData, {
         withCredentials: true,
@@ -22,6 +34,21 @@ const Login = () => {
       .then(function (response) {
         dispatch(addUser(response.data));
         navigate("/feed");
+      })
+      .catch(function (error) {
+        console.log(error);
+        setErrMessage(error?.response?.data?.error);
+      });
+  };
+
+  const handleSignupSubmit = async () => {
+    await axios
+      .post(`${BASE_URL}/auth/signup`, signupData, {
+        withCredentials: true,
+      })
+      .then(function (response) {
+        dispatch(addUser(response.data));
+        setIsLoginForm(!isLoginForm)
       })
       .catch(function (error) {
         console.log(error);
@@ -37,7 +64,9 @@ const Login = () => {
     <div className="flex items-center justify-center mt-24 ">
       <div className="card card-border bg-base-300 w-96 shadow-primary shadow-sm">
         <div className="card-body">
-          <h2 className="card-title">Login Now</h2>
+          <h2 className="card-title">
+            {isLoginForm ? "Login Now" : "Signup Now"}
+          </h2>
           {errMessage && (
             <div
               role="alert"
@@ -64,6 +93,42 @@ const Login = () => {
               </button>
             </div>
           )}
+
+          {!isLoginForm && (
+            <>
+              <label className="label">First Name</label>
+              <input
+                className="input"
+                type="text"
+                required
+                placeholder="First Name"
+                onChange={(e) =>
+                  setSignupData({ ...signupData, firstName: e.target.value })
+                }
+              />
+              <label className="label">Last Name</label>
+              <input
+                className="input"
+                type="text"
+                required
+                placeholder="Last Name"
+                onChange={(e) =>
+                  setSignupData({ ...signupData, lastName: e.target.value })
+                }
+              />
+              <label className="label">Username</label>
+              <input
+                className="input"
+                type="text"
+                required
+                placeholder="Username"
+                onChange={(e) =>
+                  setSignupData({ ...signupData, username: e.target.value })
+                }
+              />
+            </>
+          )}
+
           <label className="label">Email {loginData.email}</label>
           <input
             className="input validator"
@@ -71,7 +136,9 @@ const Login = () => {
             required
             placeholder="Email"
             onChange={(e) =>
-              setLoginData({ ...loginData, email: e.target.value })
+              isLoginForm
+                ? setLoginData({ ...loginData, email: e.target.value })
+                : setSignupData({ ...signupData, email: e.target.value })
             }
           />
           <div className="validator-hint mt-0">Enter valid email address</div>
@@ -83,7 +150,9 @@ const Login = () => {
             required
             placeholder="Password"
             onChange={(e) =>
-              setLoginData({ ...loginData, password: e.target.value })
+              isLoginForm
+                ? setLoginData({ ...loginData, password: e.target.value })
+                : setSignupData({ ...signupData, password: e.target.value })
             }
             minLength="8"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
@@ -93,15 +162,27 @@ const Login = () => {
             Must be more than 8 characters, including one number, one lowercase
             letter, one uppercase letter
           </p>
+
           <div className="card-actions justify-center">
-            <button className="btn btn-primary px-12 " onClick={handleSubmit}>
-              Login
+            <button
+              className="btn btn-primary px-12 "
+              onClick={
+                isLoginForm
+                  ? () => handleLoginSubmit()
+                  : () => handleSignupSubmit()
+              }
+            >
+              {isLoginForm ? "Login" : "Signup"}
             </button>
           </div>
+
           <div className="card-actions justify-center">
-            Don't have account?
-            <Link className="link link-primary" to={`/signup`}>
-              Signup
+            {isLoginForm ? "Don't have account?" : "Already have account?"}
+            <Link
+              className="link link-primary"
+              onClick={() => setIsLoginForm(!isLoginForm)}
+            >
+              {isLoginForm ? "Signup" : "Login"}
             </Link>
           </div>
         </div>
