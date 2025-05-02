@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "./utils/store.js";
 import Feed from "./components/Feed.jsx";
 import Hero from "./components/Hero.jsx";
-import Profile from "./components/profile.jsx";
+import Profile from "./components/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Request from "./components/Request.jsx";
 import Connections from "./components/Connections.jsx";
