@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnection } from "../utils/connectionSlice";
+import { Link } from "react-router-dom"
 
 const Connections = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -13,7 +14,6 @@ const Connections = () => {
       const res = await axios.get(`${BASE_URL}/user/connections`, {
         withCredentials: true,
       });
-      console.log(res.data.data);
       dispatch(addConnection(res.data.data) );
     } catch (error) {}
   };
@@ -51,6 +51,7 @@ const Connections = () => {
                     <code>{req.skills.join(", ")}</code>{" "}
                   </p>
                   <p> {req.bio} </p>
+                <Link to={`/chat/${req._id}`} className="btn btn-success w-28">Chat</Link>
                 </div>
               </div>
             );

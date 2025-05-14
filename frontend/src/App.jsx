@@ -13,6 +13,7 @@ import Profile from "./components/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Request from "./components/Request.jsx";
 import Connections from "./components/Connections.jsx";
+import Chat from "./components/Chat.jsx";
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Connections />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat/:targetUserId"
+                element={
+                  <ProtectedRoute>
+                    <Chat />
                   </ProtectedRoute>
                 }
               />

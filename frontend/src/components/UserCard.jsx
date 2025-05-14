@@ -55,7 +55,7 @@ const UserCard = ({ user, disableButton = false }) => {
             <code>{"@" + username}</code>{" "}
           </h2>
           <p className="card-title font-normal">{firstName + " " + lastName}</p>
-          <p className="mt-0 text-xm">{age + ", " + gender}</p>
+          {age && gender && <p className="mt-0 text-xm">{age + ", " + gender}</p>}
           <hr className="border-primary" />
           <p>{bio} </p>
           <div>

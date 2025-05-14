@@ -22,8 +22,6 @@ const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  console.log(signupData);
   
 
   const handleLoginSubmit = async () => {

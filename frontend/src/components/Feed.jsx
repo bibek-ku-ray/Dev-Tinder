@@ -8,8 +8,6 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const feedData = useSelector((state) => state.feed);
-
-  console.log("feedData:: ", feedData?.data);
   const dispatch = useDispatch();
 
   const fetchFeedData = async () => {
@@ -18,7 +16,6 @@ const Feed = () => {
         withCredentials: true,
       });
       dispatch(addFeed(res.data));
-      console.log("res.data feed: ", res.data);
     } catch (error) {
       console.log("Error feed: ", error);
     }
