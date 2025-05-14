@@ -28,11 +28,13 @@ const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const requestRoutes = require("./routes/request");
 const userRoutes = require("./routes/user");
+const chatRouter = require("./routes/chat.js");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/request", requestRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRouter);
 
 // socket configuration
 const httpServer = createServer(app);

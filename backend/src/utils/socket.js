@@ -1,5 +1,6 @@
 const socket = require("socket.io");
 const bcrypt = require("bcryptjs");
+const Chat = require("../models/chat");
 
 function initializeSocket(httpServer) {
   const io = socket(httpServer, {
@@ -26,28 +27,56 @@ function initializeSocket(httpServer) {
       socket.join(roomId);
     });
 
-    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
-      const roomId = [userId, targetUserId].sort().join("-");
+    socket.on(
+      "sendMessage",
+      async ({ firstName, userId, targetUserId, text }) => {
+        const roomId = [userId, targetUserId].sort().join("-");
 
-      // Send to sender (with targetUserMessage: false)
-      socket.emit("messageReceived", {
-        firstName,
-        userId,
-        targetUserId,
-        text,
-        targetUserMessage: false,
-      });
+        // save messages to the database
+        try {
+          let chat = await Chat.findOne({
+            participants: { $all: [userId, targetUserId] },
+          });
 
-      socket.to(roomId).emit("messageReceived", {
-        firstName,
-        userId,
-        targetUserId,
-        text,
-        targetUserMessage: true,
-      });
+          if (!chat) {
+            chat = new Chat({
+              participants: [userId, targetUserId],
+              messages: [],
+            });
+          }
 
-      console.log(firstName + " sent: " + text);
-    });
+          chat.messages.push({
+            senderId: userId,
+            text,
+          });
+          await chat.save();
+
+        } catch (error) {
+          console.error("Error saving message:", error);
+          socket.emit("error", "Failed to save message");
+          return;
+        }
+
+        // Send to sender (with targetUserMessage: false)
+        socket.emit("messageReceived", {
+          firstName,
+          userId,
+          targetUserId,
+          text,
+          targetUserMessage: false,
+        });
+
+        socket.to(roomId).emit("messageReceived", {
+          firstName,
+          userId,
+          targetUserId,
+          text,
+          targetUserMessage: true,
+        });
+
+        console.log(firstName + " sent: " + text);
+      }
+    );
 
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
