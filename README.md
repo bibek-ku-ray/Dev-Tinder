@@ -4,11 +4,6 @@ Dev-Tinder is a modern web app that helps developers discover and connect with e
 
 This repository is a full‑stack JavaScript project with a React + Vite frontend and a Node.js + Express + MongoDB backend, including real‑time features using Socket.IO.
 
-## Language Composition
-
-- JavaScript: 99.2%
-- Other: 0.8%
-
 ## Tech Stack
 
 Frontend
@@ -129,16 +124,12 @@ CLIENT_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
-Optional: If you proxy API requests from the frontend dev server, configure that in the frontend as needed.
-
 4) Run the app in development
 
 - Backend (from backend/)
   - npm run dev
 - Frontend (from frontend/)
   - npm run dev
-
-The dev servers will print their URLs in the console (Vite defaults to port 5173; backend port is controlled by `PORT`).
 
 5) Build for production (frontend)
 - cd frontend
@@ -165,33 +156,3 @@ Typical events
 - match:new
 - typing:start, typing:stop
 
-Namespace/room strategy often includes:
-- Per-user rooms (user:<id>)
-- Per-conversation rooms (chat:<id>)
-
-## Development Notes
-
-- Code Style: ESLint rules are configured in the frontend; consider adding shared linting for backend.
-- Commit Strategy: Conventional commits recommended for clear history.
-- Environment: Keep secrets out of VCS. Use `.env` and configure your deployment environment variables securely.
-
-## Roadmap Ideas
-
-- Advanced search and filtering (skills, location, availability)
-- Media uploads (avatars) via a cloud storage service
-- Push notifications (web/mobile)
-- Blocking/reporting and moderation tools
-- Internationalization (i18n)
-- Accessibility refinements (a11y)
-
-## License
-
-- Backend package.json declares ISC license.
-- If you intend to license the entire repository, consider adding a root LICENSE file with the desired terms.
-
-## Acknowledgements
-
-- React, Vite, Tailwind CSS, DaisyUI
-- Node.js, Express, MongoDB/Mongoose
-- Socket.IO
-- The open-source community
